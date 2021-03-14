@@ -11,16 +11,19 @@ class GUI:
         self.root = tk.Tk()
         self.db = Database()
         self.prev_clip = self.root.clipboard_get()
+
     def copy_to_clipboard(self, text):
         self.root.clipboard_clear()
         self.root.clipboard_append(text)
 
     def read_from_clipboard(self):
         text = self.root.clipboard_get()
-        if text != self.prev_clip:
+
+        # Only copy if clipboard content changes, or else it will constantly copy
+        if text != self.prev_clip: 
             self.prev_clip = text
             print("copied")
-            date_time = dt.today().strftime("(%m-%d %H:%M)")
+            date_time = dt.today().strftime("(%m/%d %I:%M %p)")
             self.db.store_clip(date_time, text)
         
         self.root.after(self.delay, self.read_from_clipboard)

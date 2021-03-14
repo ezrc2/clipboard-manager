@@ -2,13 +2,16 @@ from database import Database
 import tkinter as tk
 from datetime import datetime as dt
 
-class GUI:
+class ClipboardManager:
 
     def __init__(self):
         self.width = 50
-        self.truncate_length = 60
+        self.truncate_length = self.width + 10
         self.delay = 100
+
         self.root = tk.Tk()
+        self.root.title("Clipboard Manager")
+
         self.db = Database()
         self.prev_clip = self.root.clipboard_get()
 
@@ -39,12 +42,13 @@ class GUI:
             button = tk.Button(self.root, width=self.width, text=button_text, command=lambda text=text: self.copy_to_clipboard(text))
             button.pack(fill=tk.X, side=tk.BOTTOM)
 
-        clear_button = tk.Button(self.root, width=self.width // 5, text="Clear History", command=lambda: self.db.clear_clips())
+        clear_button = tk.Button(self.root, width=self.width // 5, background="red", 
+            text="Clear History", fg="red", command=lambda: self.db.clear_clips())
         clear_button.pack()
         
         self.read_from_clipboard()
         self.root.mainloop()
 
 if __name__ == "__main__":
-    GUI().run()
+    ClipboardManager().run()
     

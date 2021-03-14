@@ -6,7 +6,7 @@ class ClipboardManager:
 
     def __init__(self):
         self.width = 50
-        self.truncate_length = self.width + 10
+        self.truncate_length = 75
         self.delay = 100
 
         self.root = tk.Tk()
@@ -18,6 +18,7 @@ class ClipboardManager:
     def copy_to_clipboard(self, text):
         self.root.clipboard_clear()
         self.root.clipboard_append(text)
+        self.db.delete_clip(text)
 
     def read_from_clipboard(self):
         text = self.root.clipboard_get()
@@ -34,7 +35,8 @@ class ClipboardManager:
         if (self.root.winfo_children() is not None):
             for widget in self.root.winfo_children():
                 widget.destroy()
-        self.add_buttons()
+            self.add_buttons()
+
         self.root.after(self.delay, self.update)
         
     def add_buttons(self):
@@ -45,7 +47,8 @@ class ClipboardManager:
             if len(button_text) > self.truncate_length:
                 button_text = button_text[:self.truncate_length] + " ..."
 
-            button = tk.Button(self.root, width=self.width, text=button_text, command=lambda text=text: self.copy_to_clipboard(text))
+            button = tk.Button(self.root, width=self.width, text=button_text, anchor="w",
+                command=lambda text=text: self.copy_to_clipboard(text))
             button.pack(fill=tk.X, side=tk.BOTTOM)
 
         clear_button = tk.Button(self.root, width=self.width, background="red", 

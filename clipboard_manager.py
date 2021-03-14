@@ -15,6 +15,8 @@ class ClipboardManager:
         self.db = Database()
         self.db.create_table()
         self.prev_clip = self.root.clipboard_get()
+        if self.prev_clip is None:
+            self.prev_clip = ""
 
     def copy_to_clipboard(self, text):
         """Copies the selected text to the clipboard and removes previous entries 

@@ -1,17 +1,32 @@
 import sqlite3
 
 class Database:
+
     def store_clip(self, datetime, text):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        query = f"INSERT INTO clipboard VALUES ('{datetime}', '{text}');"
+
+        query = "CREATE TABLE IF NOT EXISTS clipboard (datetime TEXT, text TEXT);"
         cursor.execute(query)
 
-    def create_table(self):
-        conn = sqlite3.connect('database.db')
-        query = "CREATE TABLE IF NOT EXISTS clipboard (datetime TEXT, text TEXT);"
-        conn.execute(query)
+        query = "INSERT INTO clipboard (datetime, text) VALUES (?, ?);"
+        cursor.execute(query, (datetime, text))
+        conn.commit()
+        conn.close()
 
-db = Database()
-db.create_table()
-db.store_clip("08-05-20", "alksjdfkajdlfhk")
+    def get_clips(self):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        query = "SELECT * FROM clipboard;"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        conn.close()
+        return rows
+
+    def clear_clips(self):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        query = "DELETE FROM clipboard;"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()

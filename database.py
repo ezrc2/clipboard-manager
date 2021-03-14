@@ -2,13 +2,17 @@ import sqlite3
 
 class Database:
 
-    def store_clip(self, datetime, text):
+    def create_table(self):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-
         query = "CREATE TABLE IF NOT EXISTS clipboard (datetime TEXT, text TEXT);"
         cursor.execute(query)
+        conn.commit()
+        conn.close()
 
+    def insert_clip(self, datetime, text):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
         query = "INSERT INTO clipboard (datetime, text) VALUES (?, ?);"
         cursor.execute(query, (datetime, text))
         conn.commit()

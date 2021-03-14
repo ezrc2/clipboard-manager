@@ -23,6 +23,14 @@ class Database:
         conn.close()
         return rows
 
+    def delete_clip(self, text):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        query = "DELETE FROM clipboard WHERE text=?"
+        cursor.execute(query, (text,))
+        conn.commit()
+        conn.close()
+
     def clear_clips(self):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()

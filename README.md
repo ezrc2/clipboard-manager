@@ -18,5 +18,6 @@ Once you copy or cut something, it will automatically go into the database and d
 
 **Next Steps**
 - Add a scroll bar
+- Add hotkey to show and withdraw window
 - Add functionality to delete clips individually with another button
 - Package into a standalone application

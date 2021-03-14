@@ -25,13 +25,19 @@ class ClipboardManager:
         # Only copy if clipboard content changes, or else it will constantly copy
         if text != self.prev_clip: 
             self.prev_clip = text
-            print("copied")
             date_time = dt.today().strftime("(%m/%d %I:%M %p)")
             self.db.store_clip(date_time, text)
         
         self.root.after(self.delay, self.read_from_clipboard)
     
-    def run(self):
+    def update(self):
+        if (self.root.winfo_children() is not None):
+            for widget in self.root.winfo_children():
+                widget.destroy()
+        self.add_buttons()
+        self.root.after(self.delay, self.update)
+        
+    def add_buttons(self):
         rows = self.db.get_clips()
         for datetime, text in rows:
             button_text = f"{datetime}: {text}"
@@ -42,13 +48,14 @@ class ClipboardManager:
             button = tk.Button(self.root, width=self.width, text=button_text, command=lambda text=text: self.copy_to_clipboard(text))
             button.pack(fill=tk.X, side=tk.BOTTOM)
 
-        clear_button = tk.Button(self.root, width=self.width // 5, background="red", 
+        clear_button = tk.Button(self.root, width=self.width, background="red", 
             text="Clear History", fg="red", command=lambda: self.db.clear_clips())
         clear_button.pack()
-        
+
+    def run(self):
         self.read_from_clipboard()
+        self.update()
         self.root.mainloop()
 
 if __name__ == "__main__":
     ClipboardManager().run()
-    
